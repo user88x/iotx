@@ -40,6 +40,6 @@ function get_time() {
   var h = dt.getHours();
   var m = dt.getMinutes();
   var s = dt.getSeconds();
-  var time_decimal = h + m/60 + s/3600;
+  var time_decimal = h+5 + (m+30)/60 + s/3600;
   return time_decimal.toFixed(4);
 }
