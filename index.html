@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"> </script> 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/graphael/0.5.1/g.raphael-min.js"> </script> 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/graphael/0.5.1/g.line-min.js"></script>
+<script src="saveSvgAsPng.js"></script>
+
+<script>
+$(function() {
+  var UPDATE_INTERVAL = 2;
+  $(document).ready(function(){
+    var ww = $(window).width(),
+        wh = $(window).height();
+    var paper = Raphael("container", ww, wh); 
+    //paper.setSize('100%', '100%');
+    setInterval(function() {
+        $.ajax({url: "fetch", success: function(result){
+          $("#recent").html("<span style='color:black'>Oven Temperature: </span>" + result.slice().pop().temp  + " <sup style='font-size:15px'>O</sup>C");
+          if(result) update_plot(result);
+        }});
+    },1000*UPDATE_INTERVAL);
+  function update_plot(res) {
+  console.log("inside update_plot")
+    paper.clear();
+    var yVals = res.map(x => x.temp);
+    //var xVals = update_xVlas(yVals.length);
+    var xVals = res.map(x => x.time);
+    var ch = paper.linechart(30, 30, 0.8*ww, 0.8*wh, xVals, yVals, {axis: '0 0 1 1',  axisxstep:10, axisystep:10, shade:false, smooth:false});
+      var xText = ch.axis[0].text.items;      
+      for(var i in xText){ // Iterate through the array of dom elems, the current dom elem will be i
+        var _oldLabel = xText[i].attr('text'); // Get the current dom elem in the loop, and split it on the decimal
+        var int_part = Math.floor(_oldLabel).toString().padStart(2,0);
+        var frac_part = Math.round((_oldLabel - int_part)*100*0.6).toString().padStart(2,0);
+        var    _newLabel = int_part + ":" + frac_part ; // Format the result into time strings
+        xText[i].attr({'text': _newLabel}); // Set the text of the current elem with the result
+      };
+
+
+    console.log(xVals);
+    console.log(yVals)
+    console.log(ww, wh)
+    var saveBut = paper.rect(0.7*ww,0,50,20).attr({"fill":"green", opacity:0.3});
+    var saveText = paper.text(0.7*ww+25,10,"Save").attr("font-size","20px");
+    saveBut.node.onclick = function(){
+      console.log("click")
+      savePlot();
+    }
+    saveText.node.setAttribute('pointer-events', 'none')
+  }
+  function update_xVlas(len) {
+    var xVals=[];
+    for(let i=0; i< len; i++) {
+      xVals.push(i*UPDATE_INTERVAL);
+    }
+    return xVals;
+  }
+  window.savePlot = function savePlot() {
+    saveSvgAsPng($("svg")[0], "plot.png")
+  }
+  });
+})
+</script>
+</head>
+<body>
+
+<p id="recent" style="text-align:center;font-size:30px;color:red"></p>
+<div id="container" ></div> 
+
+
+</body>
+</html>
+
