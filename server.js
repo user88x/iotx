@@ -6,7 +6,7 @@ app.use(express.static(__dirname));
 var PORT = process.env.PORT || 9000;
 var PAUSE = false;
 var last_data = [];
-var dummy = [{temp:0, time: get_time()},{temp:9, time: get_time() + 1}];
+var dummy = [{temp:0, time: get_time()},{temp:0, time: get_time()*1 + 10}];
 
 app.get('/fetch',function(req, res) {
   if(!PAUSE && last_data.length) {
