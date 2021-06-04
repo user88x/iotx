@@ -41,6 +41,7 @@ $(function() {
     console.log(xVals);
     console.log(yVals)
     console.log(ww, wh)
+
     var saveBut = paper.rect(0.7*ww,0,50,20).attr({"fill":"green", opacity:0.3});
     var saveText = paper.text(0.7*ww+25,10,"Save").attr("font-size","20px");
     saveBut.node.onclick = function(){
@@ -48,6 +49,14 @@ $(function() {
       savePlot();
     }
     saveText.node.setAttribute('pointer-events', 'none')
+
+    var clearBut = paper.rect(0.7*ww-50,0,50,20).attr({"fill":"green", opacity:0.3});
+    var clearText = paper.text(0.7*ww+25-50,10,"Clear").attr("font-size","20px");
+    clearBut.node.onclick = function(){
+      console.log("click")
+      clearPlot();
+    }
+    clearText.node.setAttribute('pointer-events', 'none')
   }
   function update_xVlas(len) {
     var xVals=[];
@@ -58,6 +67,11 @@ $(function() {
   }
   window.savePlot = function savePlot() {
     saveSvgAsPng($("svg")[0], "plot.png")
+  }
+  window.clearPlot = function clearPlot() {
+    $.ajax({url: "clear", success: function(result){
+        console.log("clear success")
+    }});
   }
   });
 })

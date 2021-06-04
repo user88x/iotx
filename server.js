@@ -1,27 +1,27 @@
 const express = require('express');
-
-//require('save-svg-as-png');
-
 const app = express();
-var PORT = process.env.PORT || 9000;
+
 app.use(express.static(__dirname));
 
+var PORT = process.env.PORT || 9000;
+var PAUSE = false;
 var last_data = [];
-var dummy = [{temp:0, time: get_time()}];
+var dummy = [{temp:0, time: get_time()},{temp:9, time: get_time() + 1}];
 
 app.get('/fetch',function(req, res) {
-  if(last_data.length) {
-  res.send(last_data)
+  if(!PAUSE && last_data.length) {
+    res.send(last_data)
   }else {
-  res.send(dummy)
-
+    res.send(dummy)
   }
 })
 
-/////app.get('/alien',function(req, res) {
-/////  const id = req.query.id;
-/////  res.send('Hello alien ' + last_data)
-/////})
+app.get('/clear',function(req, res) {
+  last_data = [];
+})
+app.get('/pause',function(req, res) {
+  PAUSE = !PAUSE;
+})
 
 app.get('/data/:id',function(req, res) {
   const id = req.params.id;
@@ -40,6 +40,6 @@ function get_time() {
   var h = dt.getHours();
   var m = dt.getMinutes();
   var s = dt.getSeconds();
-  var time_decimal = h+5 + (m+30)/60 + s/3600;
+  var time_decimal = (h+5 + (m+30)/60 + s/3600) % 24;
   return time_decimal.toFixed(4);
 }
