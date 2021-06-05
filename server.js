@@ -9,7 +9,7 @@ var last_data = [];
 var dummy = [{temp:0, time: get_time()},{temp:0, time: get_time()*1 + 10}];
 
 app.get('/fetch',function(req, res) {
-  if(!PAUSE && last_data.length) {
+  if(last_data.length) {
     res.send(last_data)
   }else {
     res.send(dummy)
@@ -24,10 +24,14 @@ app.get('/pause',function(req, res) {
 })
 
 app.get('/data/:id',function(req, res) {
-  const id = req.params.id;
-  var id_noise = Math.floor(id) - Math.floor(id) % 2;
-  last_data.push({temp: id_noise, time: get_time()});
-  res.send(last_data)
+  if(!PAUSE) {
+    const id = req.params.id;
+    var id_noise = Math.floor(id) - Math.floor(id) % 2;
+    last_data.push({temp: id_noise, time: get_time()});
+    res.send(last_data)
+  }else {
+    res.send("Monitoring paused!")
+  }
 })
 
 app.listen(PORT, function(req, res) {
