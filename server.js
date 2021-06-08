@@ -10,7 +10,7 @@ var dummy = [{temp:0, time: get_time()},{temp:0, time: get_time()*1 + 10}];
 
 app.post('/whhandler',function(req, res) {
   console.log(req);
-  last_data.push("HHH")
+  last_data.push(req)
   if(last_data.length) {
     res.send(last_data)
   }else {
