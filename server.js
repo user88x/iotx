@@ -9,8 +9,8 @@ var last_data = [];
 var dummy = [{temp:0, time: get_time()},{temp:0, time: get_time()*1 + 10}];
 
 app.post('/whhandler',function(req, res) {
-  console.log(req);
-  last_data.push(JSON.stringify(req));
+  console.log(keys(req));
+  last_data.push(keys(req))
   if(last_data.length) {
     res.send(last_data)
   }else {
