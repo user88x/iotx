@@ -8,6 +8,14 @@ var PAUSE = false;
 var last_data = [];
 var dummy = [{temp:0, time: get_time()},{temp:0, time: get_time()*1 + 10}];
 
+app.post('/whhandler',function(req, res) {
+  console.log(req);
+  if(last_data.length) {
+    res.send(last_data)
+  }else {
+    res.send(dummy)
+  }
+})
 app.get('/fetch',function(req, res) {
   if(last_data.length) {
     res.send(last_data)
