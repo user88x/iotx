@@ -10,5 +10,7 @@ $(function() {
   function update_plot(res) {
     document.body.style.backgroundColor = res.color
   }
+  
+  }); //ready
 
-})
+}) //function
