@@ -8,12 +8,14 @@ const {
 
 //Using expressjs
 var express = require('express');
+
 var bodyParser = require('body-parser');
 var cors = require('cors');
 var request = require("request");
 
 const app = dialogflow({debug: true});
 var expressApp = express();
+expressApp.use(express.static(__dirname));
 
 var ip_add = "http://192.168.0.105/";
 var url;
