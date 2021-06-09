@@ -13,7 +13,7 @@ $(function() {
     if(co == "off") {co = "black"}
     if(co == "on") {co = "white"}
 
-    document.body.style.backgroundColor = res.color
+    document.body.style.backgroundColor = co;
   }
   
   }); //ready
