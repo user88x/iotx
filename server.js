@@ -18,7 +18,7 @@ var expressApp = express();
 var ip_add = "http://192.168.0.105/";
 var url;
 var color = "black";
-var PORT = 9000;
+var PORT = process.env.PORT || 9000;
 
 
 
