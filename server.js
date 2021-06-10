@@ -1,20 +1,18 @@
 //Use app in strict mode
 'use strict';
-
 //Using actions on google library
 const {
   dialogflow,
 } = require('actions-on-google');
 
-//Using expressjs
-var express = require('express');
+const express = require('express');
 
 var bodyParser = require('body-parser');
 var cors = require('cors');
 var request = require("request");
 
 const app = dialogflow({debug: true});
-var expressApp = express();
+const expressApp = express();
 expressApp.use(express.static(__dirname));
 
 var ip_add = "http://192.168.0.105/";
@@ -23,16 +21,13 @@ var color = "black";
 var temperature = 23;
 var PORT = process.env.PORT || 9000;
 
-
-
 expressApp.use(bodyParser());
 expressApp.use(bodyParser.json()); 
 expressApp.use(cors());
 
-expressApp.get('/fetch',function(req, res) {
-    res.send({color: color})
-})
-
+var PAUSE = false;
+var last_data = [];
+var dummy = [{temp:0, time: get_time()},{temp:0, time: get_time()*1 + 10}];
 expressApp.post('/fulfillment', app);
 
 app.intent('devicecontrol', (conv,{devicename,devicestatus}) => {
@@ -96,6 +91,40 @@ app.intent('readsensor', (conv,{devicename}) => {
             }
            
   });
+});
+
+
+expressApp.get('/fetch',function(req, res) {
+  if(last_data.length) {
+    res.send(last_data)
+  }else {
+    res.send(dummy)
+  }
+})
+expressApp.get('/fetchcolor',function(req, res) {
+    res.send(color)
+})
+
+expressApp.get('/clear',function(req, res) {
+  last_data = [];
+})
+expressApp.get('/pause',function(req, res) {
+  PAUSE = !PAUSE;
+})
+
+expressApp.get('/data/:id',function(req, res) {
+  if(!PAUSE) {
+    const id = req.params.id;
+    var id_noise = Math.floor(id) - Math.floor(id) % 2;
+    last_data.push({temp: id_noise, time: get_time()});
+    res.send(last_data)
+  }else {
+    res.send("Monitoring paused!")
+  }
+})
+
+expressApp.listen(PORT, function(req, res) {
+  console.log("Running server on port " +  PORT);
 });
 
 
