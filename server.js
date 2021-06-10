@@ -130,4 +130,11 @@ expressApp.listen(PORT, function(req, res) {
 
 expressApp.listen(PORT);
 console.log('Listening on port ' + PORT); 
-
+function get_time() {
+  var dt = new Date();
+  var h = dt.getHours();
+  var m = dt.getMinutes();
+  var s = dt.getSeconds();
+  var time_decimal = (h+5 + (m+30)/60 + s/3600) % 24;
+  return time_decimal.toFixed(4);
+}
