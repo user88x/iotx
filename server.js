@@ -116,6 +116,7 @@ expressApp.get('/data/:id',function(req, res) {
   if(!PAUSE) {
     const id = req.params.id;
     var id_noise = Math.floor(id) - Math.floor(id) % 2;
+    temperature = id_noise;
     last_data.push({temp: id_noise, time: get_time()});
     res.send(last_data)
   }else {
