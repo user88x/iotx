@@ -20,6 +20,7 @@ expressApp.use(express.static(__dirname));
 var ip_add = "http://192.168.0.105/";
 var url;
 var color = "black";
+var temperature = 23;
 var PORT = process.env.PORT || 9000;
 
 
@@ -69,6 +70,29 @@ app.intent('devicecontrol', (conv,{devicename,devicestatus}) => {
             }
             else{
                 resolve(conv.ask("Turned "+device_status+ " "+device_name));
+            }
+           
+  });
+});
+app.intent('readsensor', (conv,{devicename}) => {
+    // speech = "I got "+lednumber+" and "+status;
+    var device_name = devicename;
+    return new Promise((resolve, reject) => {
+        var options = { 
+            method: 'GET',
+            url: ip_add+'A0',
+            headers: 
+            { 
+                'cache-control': 'no-cache'
+            } 
+        };
+    
+            if (0) {
+                reject(conv.ask("I am not able to process it."));
+            }
+            else{
+                var sensor_data = temperature ;
+                resolve(conv.ask(device_name +" value is " +sensor_data));
             }
            
   });
