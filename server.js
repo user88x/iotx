@@ -128,8 +128,6 @@ expressApp.listen(PORT, function(req, res) {
 });
 
 
-expressApp.listen(PORT);
-console.log('Listening on port ' + PORT); 
 function get_time() {
   var dt = new Date();
   var h = dt.getHours();
